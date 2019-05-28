@@ -21,7 +21,7 @@ For this lab, a hosted shell is provided for you with all the necessary tools. U
 
 1. Enter your IBMid email and password.
 
-    {% hint style='info' %} If you are using a Single-Sign-On authentication with IBMid, use ibmcloud login --sso. {% endhint %}
+    If you are using a Single-Sign-On authentication with IBMid, use ibmcloud login --sso. 
 
 1. Select an **Account** and a **Region**.
 
