@@ -17,7 +17,11 @@
         "lang": {
           "flow": "typescript"
         }
-      } 
+      },
+      "ignore": [
+        "mermaid", 
+        "eval-js" 
+      ] 
     },
     "webheader": {
       "headerTitle" : "IBM Cloud Kubernetes Service (IKS) Lab"
