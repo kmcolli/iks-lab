@@ -10,7 +10,7 @@
       "closeEffect": "elastic"
     },
     "prism": {
-		  "lang" {
+		   "lang": {
 			  "shell": "bash"
 			}
       "css": [
