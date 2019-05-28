@@ -2,10 +2,10 @@
 gitbook install && gitbook build
 
 # checkout to the gh-pages branch
-git checkout iks-lab
+git checkout gh-pages
 
 # pull the latest updates
-git pull origin iks-lab --rebase
+git pull origin gh-pages --rebase
 
 # copy the static site files into the current directory.
 cp -R _book/* .
@@ -21,7 +21,7 @@ git add .
 git commit -a -m "Update docs"
 
 # push to the origin
-git push origin iks-lab
+git push origin gh-pages
 
 # checkout to the master branch
 git checkout master
