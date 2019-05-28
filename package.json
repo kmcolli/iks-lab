@@ -7,7 +7,8 @@
   "license": "Apache-2.0",
   "devDependencies": {},
   "dependencies": {
-    "gitbook-cli": "2.3.2"
+    "gitbook-cli": "2.3.2",
+    "gitbook-plugin-back-to-top-button": "^0.1.4"
   },
   "main": "index.js",
   "repository": {
