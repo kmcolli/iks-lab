@@ -13,6 +13,9 @@
       "css": [
         "prismjs/themes/prism-tomorrow.css"
       ]
+      "lang": {
+        "flow": "typescript"
+      }
     },
     "webheader": {
       "headerTitle" : "IBM Cloud Kubernetes Service (IKS) Lab"
