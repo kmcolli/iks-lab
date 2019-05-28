@@ -10,9 +10,6 @@
       "closeEffect": "elastic"
     },
     "prism": {
-		   "lang": {
-			  "shell": "bash"
-			}
       "css": [
         "prismjs/themes/prism-tomorrow.css"
       ]
