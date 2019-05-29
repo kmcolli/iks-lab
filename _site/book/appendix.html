@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Appendixes | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Appendixes" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/appendix.html" />
+<meta property="og:url" content="http://localhost:4000/book/appendix.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/appendix.html","headline":"Appendixes","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="appendixes">Appendixes</h1>
+
+<h2 id="appendix---assigning-access-to-namespaces">Appendix - Assigning Access to Namespaces</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```
+ibmcloud iam user-policy-create xxx.xxx@fr.ibm.com \
+--service-name containers-kubernetes \
+--service-instance 03cf54bd4548416581e63783dbe645c2 \
+--region us-south \
+--resource-type namespace \
+--resource kube-system \
+--roles Viewer
+```
+</code></pre></div></div>
+
+<h2 id="appendix---issues-when-pushing-to-the-container-registry">Appendix - Issues when pushing to the container registry</h2>
+
+<p>Below is a list of solutions to resolve issues you may face when pushing your images into the Container Registry.</p>
+
+<ol>
+  <li>
+    <p>Error: Request access to the resource is denied</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> denied: requested access to the resource is denied
+</code></pre></div>    </div>
+    <p>Note that adding a namespace only affects one region - if you want the same namespace in multiple regions you need to target each region and add it in each one. Make sure the namespace you are trying to push the image to exists.</p>
+  </li>
+  <li>
+    <p>Error: You have exceeded your storage quota</p>
+
+    <p>In this tutorial, the image is less than 100MB. Once you start pushing images you will rapidly reach the default limit of 500MB and get the following error:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> unauthorized: You have exceeded your storage quota. Delete one or more images, or review your storage quota and pricing plan
+</code></pre></div>    </div>
+    <p>Check the current quota:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud cr quota
+ Getting quotas and usage for the current month, for account 'IBM'...
+
+ QUOTA          LIMIT    USED     ADDITIONAL INFORMATION
+ Pull traffic   5.0 GB   0 B
+ Storage        512 MB   546 MB   Your account has exceeded its storage quota. Delete one or more images, or review your storage quota and pricing plan.
+</code></pre></div>    </div>
+    <p>Check the current plan:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud cr plan
+ Getting pricing plan for account 'Lionel Mace's Account'...
+
+ You are on the 'Free' pricing plan.
+</code></pre></div>    </div>
+    <p>You increase your quota you will need to upgrade plan:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud cr plan-upgrade standard
+</code></pre></div>    </div>
+    <p>Finally, you will increase the quota or just set to Unlimited</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud cr quota-set --storage unlimited
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="appendix---using-kubernetes-namespaces">Appendix - Using Kubernetes namespaces</h2>
+
+<p>In order to isolate the applications you deploy in the cluster, you may want to leverage Kubernetes namespace. Using namespace has an impact on the following commands:</p>
+
+<ol>
+  <li>Create a new namespace in your cluster. Let’s call it <em>mytodos</em>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl create namespace mytodos
+</code></pre></div>    </div>
+  </li>
+  <li>Verify your new namespace was created
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get namespaces
+</code></pre></div>    </div>
+  </li>
+  <li>The service cloudant should be bound in this namespace
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-service-bind &lt;cluster_id&gt; mytodos &lt;service_instance_name&gt;
+</code></pre></div>    </div>
+    <p>Example:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-service-bind ad35aacc139b4e11a6f3182fb13d24af mytodos todo-cloudant
+</code></pre></div>    </div>
+  </li>
+  <li>The new namespace does not contain the secret to access the private container registry. The default namespace has by default this secret to access the registry. If you try to deploy without this step, you will get this error:
+    <blockquote>
+      <p>Failed to pull image “de.icr.io/mace/mytodos:1”: rpc error: code = Unknown desc = Error response from daemon: Get https://de.icr.io/v2/mace/mytodos/manifests/v1: unauthorized: authentication required</p>
+    </blockquote>
+
+    <p>In order to add this registry secret, run the following command:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl --namespace &lt;CLUSTER_NAMESPACE&gt; create secret docker-registry &lt;IMAGE_REGISTRY_SECRET_NAME&gt; --docker-server=&lt;REGISTRY_URL&gt; --docker-password=&lt;IBMCLOUD_API_KEY&gt; --docker-username=iamapikey --docker-email=a@b.com
+</code></pre></div>    </div>
+    <p>For example:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl --namespace mytodos create secret docker-registry private-registry-secret --docker-server=de.icr.io --docker-password=&lt;IBMCLOUD_API_KEY&gt; --docker-username=iamapikey --docker-email=a@b.com
+</code></pre></div>    </div>
+    <blockquote>
+      <p>You can generate the api key using the following command:
+ <code class="highlighter-rouge">ibmcloud iam api-key-create IBMCLOUD_API_KEY</code></p>
+    </blockquote>
+  </li>
+  <li>Modify the yml file to set the image registry secret.
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="s">---</span>
+ <span class="s">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+ <span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+ <span class="na">metadata</span><span class="pi">:</span>
+ <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+ <span class="na">spec</span><span class="pi">:</span>
+ <span class="na">replicas</span><span class="pi">:</span> <span class="s">2</span> <span class="c1"># tells deployment to run 2 pods matching the template</span>
+ <span class="na">template</span><span class="pi">:</span> <span class="c1"># create pods using pod definition in this template</span>
+     <span class="na">metadata</span><span class="pi">:</span>
+     <span class="na">labels</span><span class="pi">:</span>
+         <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="na">tier</span><span class="pi">:</span> <span class="s">frontend</span>
+     <span class="na">spec</span><span class="pi">:</span>
+     <span class="na">imagePullSecrets</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">private-registry-secret</span>
+     <span class="na">containers</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="s">image</span><span class="pi">:</span> <span class="s">&lt;region&gt;.icr.io/&lt;namespace&gt;/mytodos:1</span>
+         <span class="s">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+     <span class="s">...</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Deploy the container in the new namespace
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl create -f deploy2kubernetes.yml --namespace mytodos
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="appendix---adding-user-managed-subnets-and-ip-address-to-your-automatic-load-balancer">Appendix - Adding user-managed subnets and IP address to your Automatic Load Balancer</h2>
+
+<p>In order to isolate the applications you deploy in the cluster, you may want to leverage Kubernetes namespace. Using namespace has an impact on the following commands:</p>
+
+<ol>
+  <li>View the ID of your cluster’s Private VLAN. Locate the VLANs section. In the field User-managed, identify the VLAN ID with false.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-get --showResources &lt;cluster-name&gt;
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Subnet VLANs
+ VLAN ID   Subnet CIDR         Public   User-managed   
+ 2268624   10.85.126.8/29      false    false   
+ 2268622   158.177.115.64/29   true     false   
+</code></pre></div>    </div>
+  </li>
+  <li>Add the external subnet to your private VLAN. The portable private IP addresses are added to the cluster’s configmap.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-user-subnet-add &lt;cluster_name&gt; &lt;subnet_CIDR&gt; &lt;VLAN_ID&gt;
+</code></pre></div>    </div>
+    <p>Exemple:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-user-subnet-add dev-cluster 10.101.53.0/24 2268624
+</code></pre></div>    </div>
+  </li>
+  <li>Verify that the user-provided subnet is added. The field User-managed is true.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-get --showResources &lt;cluster-name&gt;
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Subnet VLANs
+ VLAN ID   Subnet CIDR         Public   User-managed   
+ 2268624   10.101.53.0/24      false    true 
+ 2268624   10.85.126.8/29      false    false   
+ 2268622   158.177.115.64/29   true     false   
+</code></pre></div>    </div>
+  </li>
+  <li>Enable the Automatic Load Balancer (ALB) with your custom subnet
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks alb-configure --albID private-cr8001501222964a11b5dd950c9ac2662c-alb1 --enable --user-ip 10.101.53.2
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Optional: <a href="https://cloud.ibm.com/docs/containers/cs_subnets.html#vlan-spanning">Enable routing between subnets on the same VLAN</a></p>
+  </li>
+  <li>Add a private load balancer service or a private Ingress application load balancer to access your app. First retrieve the ALB.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks albs --cluster dev-cluster
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ALB ID                                            Enabled   Status    Type      ALB IP   
+ private-cr8001501222964a11b5dd950c9ac2662c-alb1   true      disabled  private   10.101.53.2   
+ public-cr8001501222964a11b5dd950c9ac2662c-alb1    true      enabled   public    158.177.115.70 
+</code></pre></div>    </div>
+  </li>
+  <li>Add a private load balancer service or a private Ingress application load balancer to access your app over the private network. To use a private IP address from the subnet that you added, you must specify an IP address.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks alb-configure --albID private-cr8001501222964a11b5dd950c9ac2662c-alb1 --enable --user-ip 10.101.53.2
+</code></pre></div>    </div>
+  </li>
+  <li>Verify that ALB was enabled
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks albs --cluster dev-cluster
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ALB ID                                            Enabled   Status    Type      ALB IP   
+ private-cr8001501222964a11b5dd950c9ac2662c-alb1   true      enabled   private   10.101.53.2   
+ public-cr8001501222964a11b5dd950c9ac2662c-alb1    true      enabled   public    158.177.115.70 
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

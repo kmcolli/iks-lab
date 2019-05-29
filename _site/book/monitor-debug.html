@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Troubleshoot and Debug | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Troubleshoot and Debug" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/monitor-debug.html" />
+<meta property="og:url" content="http://localhost:4000/book/monitor-debug.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/monitor-debug.html","headline":"Troubleshoot and Debug","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="troubleshoot-and-debug">Troubleshoot and Debug</h1>
+
+<p>What techniques for general Ingress troubleshooting and debugging can you consider?</p>
+
+<p>You publicly exposed your app by creating an Ingress resource for your app in your cluster. However, when you try to connect to your app through the ALB’s public IP address or subdomain, the connection fails or times out. The steps in the following sections can help you debug your Ingress setup.</p>
+
+<p><img src="/book/images/monitor-debug.png" alt="" /></p>
+
+<h2 id="deploy-run-ingress-tests-in-the-ibm-cloud-kubernetes-service-diagnostics-and-debug-tool">Deploy Run Ingress tests in the IBM Cloud Kubernetes Service Diagnostics and Debug Tool</h2>
+
+<ol>
+  <li>
+    <p>Set up Helm in your cluster, create a service account for Tiller, and add the ibm repository to your Helm instance. You need to do the steps done in Step 4.1.</p>
+  </li>
+  <li>
+    <p>Add the IBM Cloud Helm repositories to your Helm instance.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm repo add iks-charts https://icr.io/helm/iks-charts
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm repo add ibm-charts https://icr.io/helm/ibm-charts
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Update the repos to retrieve the latest versions of all Helm charts.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm repo update
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>List the Helm charts that are currently available in the IBM Cloud repositories.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm search iks-charts
+</code></pre></div>    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm search ibm-charts
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Install the Helm Debug chart to your cluster.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> helm install iks-charts/ibmcloud-iks-debug --name debug-tool
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Start a proxy server to display the debug tool interface.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl proxy --port 8080
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>In a web browser, open the debug tool interface URL:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> http://localhost:8080/api/v1/namespaces/default/services/debug-tool-ibmcloud-iks-debug:8822/proxy/page
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Select the ingress group of tests. Some tests check for potential warnings, errors, or issues, and some tests only gather information that you can reference while you troubleshoot. For more information about the function of each test, click the information icon next to the test’s name.</p>
+  </li>
+  <li>
+    <p>Click <strong>Run</strong>.</p>
+  </li>
+  <li>
+    <p>Check the results of each test.</p>
+
+    <ul>
+      <li>If any test fails, click the information icon next to the test’s name in the left-hand column for information about how to resolve the issue.</li>
+      <li>You can also use the results of tests that only gather information while you debug your Ingress service in the following sections.</li>
+    </ul>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

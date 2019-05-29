@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Install the Kubernetes Service and Container Registry plugins | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Install the Kubernetes Service and Container Registry plugins" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/prepare-plugins.html" />
+<meta property="og:url" content="http://localhost:4000/book/prepare-plugins.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/prepare-plugins.html","headline":"Install the Kubernetes Service and Container Registry plugins","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="install-the-kubernetes-service-and-container-registry-plugins">Install the Kubernetes Service and Container Registry plugins</h1>
+
+<p><code class="highlighter-rouge">ibmcloud</code> is the command line tool to interact with IBM Cloud. It comes with plugins to work with IBM Cloud services. For the lab, we need two plugins <strong>Kubernetes Service</strong> and <strong>Container Registry</strong>.</p>
+
+<ol>
+  <li>
+    <p>Open a command line utility.</p>
+  </li>
+  <li>Before installing any plugin, you need to add the repository hosting IBM Cloud CLI plug-ins.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin repos
+</code></pre></div>    </div>
+    <p>Output:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Listing added plug-in repositories...
+
+ Repo Name   URL                                    Description
+ IBM Cloud   https://plugins.cloud.ibm.com          Official repository (Formerly named 'Bluemix')
+</code></pre></div>    </div>
+  </li>
+  <li>If you don’t see a repository, run the following command:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin repo-add <span class="s2">"IBM Cloud"</span> https://plugins.cloud.ibm.com
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="install-the-kubernetes-service-ks-plugin">Install the Kubernetes Service (KS) plugin</h2>
+<p>To create Kubernetes clusters, and manage worker nodes, install the Container Service plug-in.</p>
+
+<ol>
+  <li>To install the Container Service plugin, run the following command:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin install container-service <span class="nt">-r</span> <span class="s2">"IBM Cloud"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Log in to the IBM Cloud Kubernetes Service. The prefix for running commands by using the IBM Cloud Kubernetes Service plug-in is <strong>ibmcloud ks</strong>.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks init
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="install-the-container-registry-cr-plugin">Install the Container Registry (CR) plugin</h2>
+<ol>
+  <li>
+    <p>To manage a private image registry, install the Container Registry plug-in.</p>
+
+    <p>This plug-in connects to a private image registry, where you can store docker images that can be used to build containers. The prefix for running registry commands is <strong>ibmcloud cr</strong>.</p>
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin install container-registry <span class="nt">-r</span> <span class="s2">"IBM Cloud"</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="verify-the-plugins-installation">Verify the plugins installation</h2>
+<ol>
+  <li>To verify that the plug-in has been installed properly, run the following command:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin list
+</code></pre></div>    </div>
+    <p>and both plug-ins are displayed in the results:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Listing installed plug-ins...
+
+ Plugin Name          Version
+ container-registry                     0.1.347   
+ container-service/kubernetes-service   0.2.19 
+</code></pre></div>    </div>
+  </li>
+  <li>To update the container registry plugin
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud plugin update container-registry
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

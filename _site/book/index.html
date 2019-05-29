@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iks-lab" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/" />
+<meta property="og:url" content="http://localhost:4000/book/" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/","headline":"iks-lab","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <p>With this lab, you will deploy and manage a Kubernetes cluster in IBM® Cloud Kubernetes Service (IKS). Learn how to automate the deployment, operation, scaling, and monitoring of containerized apps in a cluster.</p>
+
+<p>In this tutorial, you act as a developper. You configure a custom Kubernetes cluster that is used to deploy and test a web application for managing todos. The front end is written in Angular and the reminders are being stored in a Cloudant NoSQL dababase. All run on Node.js, in Docker container managed by Kubernetes.</p>
+
+<h2 id="objectives">Objectives</h2>
+
+<ul>
+  <li>Create a cluster with 1 worker pool that has 1 worker node.</li>
+  <li>Install the CLIs for running Kubernetes commands and managing Docker images in IBM Cloud Container Registry.</li>
+  <li>Create a private image repository in IBM Cloud Container Registry to store your images.</li>
+  <li>Add the Cloudant NoSQL DB service to the cluster so that any app in the cluster can use that service.</li>
+</ul>
+
+<h2 id="architecture">Architecture</h2>
+
+<p><img src="/book/images/kubelabarchi.png" alt="" /></p>
+
+<ol>
+  <li>A developer clone an existing web application from Github.</li>
+  <li>Run the application locally and produce a Docker container image.</li>
+  <li>The image is pushed to a namespace in the Container Registry Service.</li>
+  <li>The application is deployed to a Kubernetes cluster.</li>
+  <li>Users access the application.</li>
+</ol>
+
+<h2 id="services-used">Services used</h2>
+
+<p>This tutorial uses the following runtimes and services:</p>
+<ul>
+  <li><a href="https://cloud.ibm.com/containers-kubernetes/launchRegistryView">IBM Cloud Container Registry</a></li>
+  <li><a href="https://cloud.ibm.com/containers-kubernetes/catalog/cluster">IBM Cloud Kubernetes Service</a></li>
+  <li><a href="https://cloud.ibm.com/catalog/services/continuous-delivery">Continuous Delivery</a></li>
+  <li><a href="https://cloud.ibm.com/catalog/services/cloudant">Cloudant</a></li>
+  <li><a href="https://cloud.ibm.com/observe/logging/create">IBM Log Analysis with LogDNA</a></li>
+  <li><a href="https://cloud.ibm.com/observe/monitoring/create">IBM Cloud Monitoring with Sysdig</a></li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

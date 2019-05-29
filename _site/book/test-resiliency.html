@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Test Resiliency | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Test Resiliency" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/test-resiliency.html" />
+<meta property="og:url" content="http://localhost:4000/book/test-resiliency.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/test-resiliency.html","headline":"Test Resiliency","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="test-resiliency">Test Resiliency</h1>
+
+<ol>
+  <li>Activate the watch on the pod in a separate windows to track what’s going on your pods while you kill your worker nodes:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get po <span class="nt">-o</span> wide <span class="nt">-w</span>
+</code></pre></div>    </div>
+  </li>
+  <li>First, identify the name of the node you wish to drain. You can list all of the nodes and their respective IPs in your cluster with
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get nodes
+</code></pre></div>    </div>
+  </li>
+  <li>Next, tell Kubernetes to drain the node:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl drain &lt;node name&gt; <span class="nt">--ignore-daemonsets</span> <span class="nt">--delete-local-data</span>
+</code></pre></div>    </div>
+
+    <p>The node name is the private IP address in IKS.</p>
+
+    <p>Output:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> node/10.135.52.88 already cordoned
+ WARNING: Deleting pods with local storage: kubernetes-dashboard-7d5d4f48c4-pmgp9; Ignoring DaemonSet-managed pods: logdna-agent-lm8v4, calico-node-78rms, ibm-keepalived-watcher-l6vp8, ibm-kube-fluentd-5ghgk, ibm-master-proxy-48ttq
+ pod/ibm-storage-watcher-74c46db958-hfz5v evicted
+ pod/kubernetes-dashboard-7d5d4f48c4-pmgp9 evicted
+ pod/ibm-cloud-provider-ip-161-156-93-78-5c7d96bb68-pvg9j evicted
+ pod/ibm-file-plugin-b759f7cb7-6jmdx evicted
+ pod/kube-dns-autoscaler-6cf64dc49f-gh6xk evicted
+ pod/calico-kube-controllers-6744d867-7fgxl evicted
+ pod/public-crac8b7d523dea4c85bea1139ef7328163-alb1-657b4fbbb4-xvq2q evicted
+ pod/client-certificate-demo-676dbdd676-8b7k7 evicted
+ pod/kube-dns-amd64-5dc4d6b67-clvnh evicted
+</code></pre></div>    </div>
+  </li>
+  <li>Check the status of your node. You should see the status <code class="highlighter-rouge">SchedulingDisabled</code>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> NAME           STATUS                     ROLES     AGE       VERSION
+ 10.123.12.75   Ready                      &lt;none&gt;    48d       v1.11.3+IKS
+ 10.135.52.88   Ready,SchedulingDisabled   &lt;none&gt;    48d       v1.11.3+IKS
+</code></pre></div>    </div>
+  </li>
+  <li>Tell Kubernetes that it can resume scheduling new pods onto the node
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl uncordon &lt;node name&gt;
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

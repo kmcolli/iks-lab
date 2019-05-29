@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Create a kubernetes cluster using the CLI | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Create a kubernetes cluster using the CLI" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/appendix-create-cluster-cli.html" />
+<meta property="og:url" content="http://localhost:4000/book/appendix-create-cluster-cli.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/appendix-create-cluster-cli.html","headline":"Create a kubernetes cluster using the CLI","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="create-a-kubernetes-cluster-using-the-cli">Create a kubernetes cluster using the CLI</h1>
+
+<p>To create a cluster, you have two options either a Lite cluster or a Standard one.</p>
+
+<ul>
+  <li>
+    <p>A <strong>Lite cluster</strong> is a free cluster comes with a single worker node to deploy container pods upon. A worker node is the compute host, typically a virtual machine, that your apps run on. Go to Step <em>Create a Lite cluster</em></p>
+  </li>
+  <li>
+    <p>A <strong>Standard cluster</strong> is a production-ready cluster with as many worker nodes as you want. A Standard cluster requires requires a IBM Cloud Infrastructure account. Go to Step <em>Create a Standard cluster</em>.</p>
+  </li>
+</ul>
+
+<h2 id="create-a-lite-cluster">Create a Lite cluster</h2>
+
+<ol>
+  <li>Create your Lite cluster.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-create --name &lt;your-cluster-name&gt;
+</code></pre></div>    </div>
+    <p>Once the cluster reaches the <strong>deployed</strong> state you can provision pods, but they will be enqueued until the cluster’s pods are finished provisioning. Note that it takes up to 15 minutes for the worker node machine to be ordered and for the cluster to be set up and provisioned.</p>
+  </li>
+  <li>Verify that the creation of the cluster was requested.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks clusters
+</code></pre></div>    </div>
+  </li>
+  <li>Check the status of the worker node(s).
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks workers &lt;cluster_name_or_id&gt;
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="create-a-standard-cluster">Create a Standard cluster</h2>
+
+<ol>
+  <li>Set Infrastructure credentials
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks credentials-set --infrastructure-username &lt;YOUR-USER-NAME&gt; --infrastructure-api-key &lt;YOUR-API-KEY&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>Review the data centers that are available.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks zones
+</code></pre></div>    </div>
+    <p>Output for US South:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> dal10
+ dal12
+</code></pre></div>    </div>
+  </li>
+  <li>Review the machine types available in the data center
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks machine-types &lt;datacenter&gt;
+</code></pre></div>    </div>
+    <p>Output for fra02:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Name                      Cores   Memory   Network Speed   OS             Server Type   Storage   Secondary Storage   Trustable
+ u2c.2x4                   2       4GB      1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ ms2c.4x32.1.9tb.ssd       4       32GB     10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               false
+ ms2c.16x64.1.9tb.ssd      16      64GB     10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               true
+ ms2c.28x256.3.8tb.ssd     28      256GB    10000Mbps       UBUNTU_16_64   physical      2000GB    1920GB              true
+ ms2c.28x512.4x3.8tb.ssd   28      512GB    10000Mbps       UBUNTU_16_64   physical      2000GB    1920GB              true
+ mr1c.28x512               28      512GB    10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               true
+ mg1c.16x128               16      128GB    10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               false
+ mg1c.28x256               28      256GB    10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               false
+ md1c.16x64.4x4tb          16      64GB     10000Mbps       UBUNTU_16_64   physical      2000GB    8000GB              true
+ md1c.28x512.4x4tb         28      512GB    10000Mbps       UBUNTU_16_64   physical      2000GB    8000GB              true
+ mb2c.4x32                 4       32GB     10000Mbps       UBUNTU_16_64   physical      2000GB    2000GB              false
+ mb1c.16x64                16      64GB     10000Mbps       UBUNTU_16_64   physical      2000GB    960GB               true
+ c2c.16x16                 16      16GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ c2c.16x32                 16      32GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ c2c.32x32                 32      32GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ c2c.32x64                 32      64GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ b2c.4x16                  4       16GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ b2c.8x32                  8       32GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ b2c.16x64                 16      64GB     1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ b2c.32x128                32      128GB    1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+ b2c.56x242                56      242GB    1000Mbps        UBUNTU_16_64   virtual       25GB      100GB               false
+</code></pre></div>    </div>
+  </li>
+  <li>Get the available VLANs in your account
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks vlans &lt;datacenter&gt;
+</code></pre></div>    </div>
+    <p>Output for fra02:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ID        Name   Number   Type      Router         Supports Virtual Workers
+ 2438033          1817     private   bcr01a.fra02   true
+ 2438031          1898     public    fcr01a.fra02   true
+</code></pre></div>    </div>
+    <blockquote>
+      <p>When you create a Kube cluster with no vlans in create command, those should get created for you.</p>
+    </blockquote>
+  </li>
+  <li>Create cluster
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-create \
+   --name &lt;cluster-name&gt; \
+   --zone &lt;zone&gt; \
+   --workers &lt;number-of-workers&gt; \
+   --machine-type &lt;machine-type&gt; \
+   --hardware shared \
+   --public-vlan &lt;public-vlan-id&gt; \
+   --private-vlan &lt;private-vlan-id&gt;
+</code></pre></div>    </div>
+    <p>For example:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-create \
+   --name my-cluster \
+   --zone fra02 \
+   --workers 1 \
+   --machine-type u2c.2x4 \
+   --hardware shared \
+   --public-vlan 2438031 \
+   --private-vlan 2438033
+</code></pre></div>    </div>
+    <blockquote>
+      <p>The cluster creation can be scripted. A yml sample is provided in <strong>kubernetes/cluster-create.yml</strong> once you have donwloaded the application code in Step 5.</p>
+    </blockquote>
+  </li>
+  <li>Verify that the creation of the cluster was requested.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks clusters
+</code></pre></div>    </div>
+  </li>
+  <li>Check the status of the worker node(s).
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks workers &lt;cluster_name_or_id&gt;
+</code></pre></div>    </div>
+
+    <blockquote>
+      <p>The cluster creation process is as follow:</p>
+    </blockquote>
+
+    <table>
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>provision_pending</td>
+          <td>Waiting for master to be deployed</td>
+        </tr>
+        <tr>
+          <td>provisioning</td>
+          <td>Provisioning in progress</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Starting worker deployment</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Installing Docker Runtime</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Configuring Kubectl CLI</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Preparing Worker for Calico Networking Setup</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Starting Kube Worker Services</td>
+        </tr>
+        <tr>
+          <td>deploying</td>
+          <td>Configuring Calico-Workers</td>
+        </tr>
+        <tr>
+          <td>deployed</td>
+          <td>Deploying</td>
+        </tr>
+        <tr>
+          <td>deployed</td>
+          <td>Deploy Automation Successful</td>
+        </tr>
+        <tr>
+          <td>normal</td>
+          <td>Ready</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<h2 id="connect-to-the-kubernetes-cluster">Connect to the Kubernetes cluster</h2>
+
+<ol>
+  <li>
+    <p>Connect to the Kubernetes Cluster. Use the kubectl command to check that you are connected:</p>
+
+    <p><code class="highlighter-rouge">kubectl get nodes</code></p>
+  </li>
+</ol>
+
+<h2 id="access-the-cluster-via-kubernetes-cli-and-dashboard">Access the cluster via Kubernetes CLI and Dashboard</h2>
+
+<ol>
+  <li>You will need the kubeconfig data and certs to connect to your cluster using kubectl. You can download the config to your local machine via the CLI. Issue the following command to download your kubeconfig for a given cluster.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-config &lt;cluster_name_or_id&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Use the result of the previous command to set the path to your Kubernetes configuration file as an environment variable.
+ For Mac:
+ <code class="highlighter-rouge">export KUBECONFIG=/Users/ibm/.bluemix/plugins...</code>
+ For Win:
+ <code class="highlighter-rouge">set KUBECONFIG=/Users/ibm/.bluemix/plugins...</code></p>
+  </li>
+  <li>Access your Kubernetes dashboard with the default port 8001.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl proxy
+ Starting to serve on 127.0.0.1:8001
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Open the Kubernetes dashboard: <a href="http://localhost:8001/ui" target="_blank">http://localhost:8001/ui</a></p>
+
+    <p><img src="/book/images/kubernetes-dashboard.png" alt="" /></p>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

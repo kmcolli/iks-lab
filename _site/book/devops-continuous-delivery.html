@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Deploy using a Continuous Delivery Pipeline | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Deploy using a Continuous Delivery Pipeline" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/devops-continuous-delivery.html" />
+<meta property="og:url" content="http://localhost:4000/book/devops-continuous-delivery.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/devops-continuous-delivery.html","headline":"Deploy using a Continuous Delivery Pipeline","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h2 id="deploy-using-a-continuous-delivery-pipeline">Deploy using a Continuous Delivery Pipeline</h2>
+
+<p>In this tutorial, you create an open toolchain and use it to deploy the web app, package it into a Docker container, and then deploy the app to a Kubernetes cluster using Helm charts.</p>
+
+<p>IBM Cloud Continuous Delivery supports Helm functions in the Delivery Pipeline.</p>
+
+<p>The toolchain used for this tutorial is configured out of the box to perform sanity checks before build or deploy activities, and manages development privacy by using a private image registry and configurable namespaces (both in the container registry and Kubernetes cluster).</p>
+
+<p>The toolchain includes:</p>
+
+<ul>
+  <li>Git Repos and Issue Tracking for source control and issue tracking.</li>
+  <li>Eclipse Orion Web IDE for online editing.</li>
+  <li>Vulnerability Advisor to ensure the container we’re deploying is secure.</li>
+  <li>Deployment to IBM Cloud Kubernetes with Helm.</li>
+</ul>
+
+<h1 id="create-a-toolchain">Create a Toolchain</h1>
+
+<ol>
+  <li>
+    <p>Open the creation page for the toolchain by clicking <strong><a href="https://cloud.ibm.com/devops/setup/deploy?repository=https://github.com/lionelmace/mytodo&amp;branch=master">Create toolchain</a></strong></p>
+  </li>
+  <li>
+    <p>The diagram of the toolchain shows each tool integration in its lifecycle phase in the toolchain.</p>
+
+    <p><img src="/book/images/toolchain-landing.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Review the default information for the toolchain settings. Select the region <strong>Frankfurt</strong> and the Resource Group <strong>lab</strong>.</p>
+
+    <p><img src="/book/images/toolchain-name-param.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Keep the default options for the git configuration. This should like the following:</p>
+
+    <p><img src="/book/images/toolchain-git.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Click Delivery Pipeline.</p>
+
+    <p><img src="/book/images/toolchain-pipeline-config.png" alt="" /></p>
+
+    <ul>
+      <li>
+        <p><strong>App name</strong>: Enter the name for your application. The app name must be unique (if you want, you can just use the default value provided).</p>
+      </li>
+      <li>
+        <p><strong>Container Registry Region</strong>: Select the region you want the docker images to be created into.</p>
+      </li>
+      <li>
+        <p><strong>Container Registry Namespace</strong>: This is your folder in the global image registry in a region, used to manage your own set of images. It must be a unique name.</p>
+      </li>
+      <li>
+        <p><strong>IBM Cloud API Key</strong>: Create a new IBM Cloud API Key.</p>
+      </li>
+      <li>
+        <p><strong>Cluster Region</strong>: Select the region for the target cluster.</p>
+      </li>
+      <li>
+        <p><strong>Cluster Name</strong>: The name of the Kubernetes  cluster that you got assigned. Exemple: <code class="highlighter-rouge">lab-cluster-1</code></p>
+      </li>
+      <li>
+        <p><strong>Cluster Namespace</strong>: It is a best practice to use explicit namespaces in clusters to separate deployed resources. For instance, we use ‘prod’ to denote a prod environment within this cluster. Later in the tutorial, we will add a ‘staging’ environment within the same cluster. You can leave this setting at its default ‘prod’ value.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>Create</strong>. After a few moments, your new toolchain’s Overview page opens.</p>
+
+    <p><img src="/book/images/toolchain-created.png" alt="" /></p>
+  </li>
+</ol>
+
+<h1 id="explore-delivery-pipeline-in-your-toolchain">Explore Delivery Pipeline in your toolchain</h1>
+
+<p>Explore Delivery Pipeline in your toolchain. The pipeline is automatically triggered on every Git commit push.</p>
+
+<p>A delivery pipeline automates the continuous deployment of a project. In a project’s pipeline, sequences of stages retrieve input and run jobs, such as builds, tests, and deployments. You can use a pipeline to facilitate everything that is required for a DevOps project.</p>
+
+<ol>
+  <li>
+    <p>On the toolchain’s Overview page, click <strong>Delivery Pipeline</strong> to see your toolchain as it is being built and deployed. Your pipeline might still be running.</p>
+
+    <p><img src="/book/images/toolchain-pipeline.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Review the BUILD stage. On the BUILD stage, click the Configure Stage icon to explore the stage.</p>
+
+    <ul>
+      <li>
+        <p>The <strong>Pre-build check</strong> job checks for mandatory files (the Dockerfile and Helm chart), lints the files, and creates the image registry namespace.</p>
+      </li>
+      <li>
+        <p>The <strong>Build Docker image</strong> job creates the Docker image by using the IBM Cloud Container Registry build service through the bx cr build CLI script. The script stores the output image into the private IBM Cloud Container Registry and copies the Helm chart and other app scripts with the build results into the ARCHIVE_DIR folder.</p>
+      </li>
+      <li>
+        <p>The build scripts also record a few environment variables into a build.properties file.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>CANCEL</strong> to return to the pipeline.</p>
+  </li>
+  <li>
+    <p>On the BUILD stage, click <strong>View logs and history</strong>. Notice that the stage is building the container and copying the Kubernetes deploy manifest file into build artifacts.</p>
+  </li>
+  <li>
+    <p>On the pipeline’s log page, click the <strong>Back</strong> arrow to return to the pipeline page.</p>
+  </li>
+  <li>
+    <p>On the VALIDATE stage, click the <strong>Configure Stage</strong> icon to explore the stage.</p>
+
+    <ul>
+      <li>
+        <p>This toolchain prevents you from deploying unsafe Docker images using IBM Cloud Vulnerability Advisor. This is performed by the pipeline job Vulnerability Advisor which runs the container registry command bx cr va ${PIPELINE_IMAGE_URL}. Notice how the VALIDATE stage is configured to receives the build.properties file from the build result, which will automatically recreate the respective environment properties.</p>
+      </li>
+      <li>
+        <p>When security issues are discovered, a report will be printed in the job log.</p>
+      </li>
+      <li>
+        <p>The <strong>Use the container image from the stage input</strong> check box is selected.</p>
+      </li>
+      <li>
+        <p>The VALIDATE stage is configured to be advisory so that if it fails, it does not block the pipeline. You can change this behavior by selecting the <strong>Stop running this stage if this job fails</strong> check box.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>CANCEL</strong> to return to the pipeline.</p>
+  </li>
+  <li>
+    <p>On the VALIDATE stage, click <strong>View logs and history</strong>. This stage runs the Vulnerability Advisor on the image to check for known vulnerabilities. If it finds a vulnerability, the stage fails, preventing the image from being deployed. This safety feature prevents apps with security holes from being deployed. The image has no vulnerabilities, so it passes.</p>
+  </li>
+  <li>
+    <p>On the pipeline’s log page, click the <strong>Back</strong> arrow to return to the pipeline page.</p>
+  </li>
+  <li>
+    <p>On the PROD stage, click the <strong>Configure Stage</strong> icon to explore the stage.</p>
+
+    <ul>
+      <li>
+        <p>The “Pre-deploy check” job checks for cluster readiness and namespace existence, configures the cluster namespace, grants access to the private image registry, configures tiller, and checks the Helm releases in the namespace.</p>
+      </li>
+      <li>
+        <p>The “Deploy Helm chart” job sets environment variables and deploys the Helm chart into the Kubernetes cluster.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>CANCEL</strong> to return to the pipeline.</p>
+  </li>
+  <li>
+    <p>On the PROD stage, click <strong>View logs and history</strong> and then click the <strong>Deploy Helm chart</strong> job. This job deploys the app into the Kubernetes cluster. At the end of the log file, find the link to the running application.</p>
+
+    <p><img src="/book/images/toolchain-pipeline-deploy.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Browse to the given url to see the running application. The url should look similar to this https://todo.lab-cluster-2.eu-de.containers.appdomain.cloud/.</p>
+  </li>
+</ol>
+
+<h1 id="troubleshooting-your-pipeline">Troubleshooting your pipeline</h1>
+
+<ol>
+  <li>If you face the following error in the step <strong>Pre-deploy check 1</strong>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> CHECKING HELM releases in this namespace: prod
+Error: configmaps is forbidden: User "system:serviceaccount:kube-system:default" cannot list resource "configmaps" in API group "" in the namespace "kube-system"
+</code></pre></div>    </div>
+
+    <p>Set the right permissions to be able to install package</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

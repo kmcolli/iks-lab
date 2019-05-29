@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Scale the application using the replica | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Scale the application using the replica" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/scale-app.html" />
+<meta property="og:url" content="http://localhost:4000/book/scale-app.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/scale-app.html","headline":"Scale the application using the replica","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="scale-the-application-using-the-replica">Scale the application using the replica</h1>
+
+<p>The application was deployed with 2 replicas. Let’s scale it to 3 replicas.</p>
+
+<ol>
+  <li>Let’s scale up to 3 replicas
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl scale <span class="nt">--replicas</span><span class="o">=</span>3 deployment/mytodos
+</code></pre></div>    </div>
+  </li>
+  <li>Then, inspect your Pods again.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get pods
+</code></pre></div>    </div>
+    <p>You should now see 3 pods.</p>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

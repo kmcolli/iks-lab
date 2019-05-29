@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Logging with LogDNA | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Logging with LogDNA" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/monitor-cluster-logs.html" />
+<meta property="og:url" content="http://localhost:4000/book/monitor-cluster-logs.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/monitor-cluster-logs.html","headline":"Logging with LogDNA","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="logging-with-logdna">Logging with LogDNA</h1>
+
+<p>IBM Log Analysis with LogDNA is a third-party service that you can include as part of your IBM Cloud architecture to add log management capabilities. IBM Log Analysis with LogDNA is operated by LogDNA in partnership with IBM.</p>
+
+<p>On the IBM Cloud, to configure cluster-level logging for a Kubernetes cluster, you must provision an instance of the IBM Log Analysis with LogDNA service.</p>
+
+<p><img src="/book/images/logdna-architecture.png" alt="" /></p>
+
+<h2 id="provision-an-instance-of-log-analysis-with-logdna-service">Provision an instance of Log Analysis with LogDNA service</h2>
+
+<ol>
+  <li>
+    <p>Navigate to the <a href="https://cloud.ibm.com/observe"><strong>Observability</strong></a> page</p>
+
+    <p><img src="/book/images/observe-landing.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Under <strong>Logging</strong>, click <strong>Create instance</strong>.</p>
+  </li>
+  <li>
+    <p>Provide a unique <strong>Service name</strong> such as <code class="highlighter-rouge">logdna-&lt;lastname&gt;</code>.</p>
+  </li>
+  <li>
+    <p>Choose a <strong>region/location</strong> and select a <strong>resource group</strong>.</p>
+
+    <p><img src="/book/images/logging-creation.png" alt="" /></p>
+
+    <blockquote>
+      <p>To better govern your services, it is recommended to use the same Resource Group than the one your cluster is in.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select <strong>Lite</strong> as your plan and click <strong>Create</strong>.</p>
+
+    <p><img src="/book/images/logging-plan.png" alt="" /></p>
+  </li>
+  <li>
+    <p>The Observability dashboard opens and shows the details for your service.</p>
+  </li>
+</ol>
+
+<h2 id="configure-the-cluster-to-send-logs-to-your-logdna-instance">Configure the cluster to send logs to your LogDNA instance.</h2>
+
+<p>To configure your Kubernetes cluster to send logs to your IBM Log Analysis with LogDNA instance, you must install a <code class="highlighter-rouge">logdna-agent</code> pod on each node of your cluster. The LogDNA agent reads log files from the pod where it is installed, and forwards the log data to your LogDNA instance.</p>
+
+<ol>
+  <li>
+    <p>Click on <strong>Edit log sources</strong> next to the service which you created earlier.</p>
+
+    <p><img src="/book/images/logging-configure.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Select <strong>Kubernetes</strong>.</p>
+
+    <p><img src="/book/images/logdna-agents.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Copy and run the first command on a terminal where you have set the KUBECONFIG environment variable to create a kubernetes secret with the LogDNA ingestion key for your service instance.</p>
+
+    <p>In this step, you create a Kubernetes secret to store your logDNA ingestion key for your service instance. The LogDNA ingestion key is used to open a secure web socket to the logDNA ingestion server and to authenticate the logging agent with the logging service.</p>
+  </li>
+  <li>
+    <p>Copy and run the second command to create a Kubernetes daemon set to deploy the LogDNA agent on every worker node of your Kubernetes cluster.</p>
+
+    <p>The LogDNA agent collects logs with the extension *.log and extensionless files that are stored in the /var/log directory of your pod. By default, logs are collected from all namespaces, including kube-system, and automatically forwarded to the IBM Log Analysis with LogDNA service.</p>
+  </li>
+  <li>Verify that the LogDNA agent is deployed successfully.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get pods
+</code></pre></div>    </div>
+    <p>Output:</p>
+
+    <p><img src="/book/images/logdna-agent-pods.png" alt="" /></p>
+
+    <p>The deployment is successful when you see one or more LogDNA pods. The number of LogDNA pods equals the number of worker nodes in your cluster. All pods must be in a Running state.</p>
+  </li>
+  <li>To check that the secret containing the access key has been created, you can run the following command:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get secrets
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="view-logs-in-the-logdna-dashboard">View logs in the LogDNA dashboard</h2>
+
+<ol>
+  <li>
+    <p>After you configure a log source, launch the LogDNA UI by clicking <strong>View LogDNA</strong>.</p>
+
+    <p>This might take a few minutes before you start seeing logs.</p>
+  </li>
+  <li>
+    <p>Since namespace is a field that LogDNA collects, you can use the search function to filter your namespace. Use <code class="highlighter-rouge">namespace:name</code> to view only the logs of the applications deployed to the specified namespace.</p>
+
+    <blockquote>
+      <p>Note: With the Free service plan, you can tail your latest logs only.</p>
+    </blockquote>
+  </li>
+  <li>If your app is still running you can create a new todo with the Web UI or using curl
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl -d '{"text":"newlog"}' -H "Content-Type: application/json" -X POST https://&lt;cluster-name&gt;.&lt;region&gt;.containers.appdomain.cloud/todo/api/todos
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>As you go through the next steps, keep an eye on the LogDNA console for new log statements coming from your apps deployed in this namespace.</p>
+
+    <p><img src="/book/images/logdna-console.png" alt="LogDNA dashboard" /></p>
+  </li>
+</ol>
+
+<h2 id="resources">Resources</h2>
+
+<p>For additional resources pay close attention to the following:</p>
+
+<ul>
+  <li>More about IBM Log Analysis with LogDNA in the <a href="https://cloud.ibm.com/docs/services/Log-Analysis-with-LogDNA/index.html#getting-started">IBM Cloud documentation</a>.</li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

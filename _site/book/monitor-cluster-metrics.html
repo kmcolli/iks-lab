@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Monitoring metrics with Sysdig | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Monitoring metrics with Sysdig" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/monitor-cluster-metrics.html" />
+<meta property="og:url" content="http://localhost:4000/book/monitor-cluster-metrics.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/monitor-cluster-metrics.html","headline":"Monitoring metrics with Sysdig","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="monitoring-metrics-with-sysdig">Monitoring metrics with Sysdig</h1>
+
+<p>Sysdig Monitor is part of Sysdig’s container intelligence platform. Sysdig uses a unified platform to deliver security, monitoring, and forensics in a container and microservices-friendly architecture.</p>
+
+<p>Once the agent has started sending metrics to Sysdig for your environment, you can use the Sysdig Monitor UI to view and analyze that data.</p>
+
+<h2 id="provision-an-instance-of-monitoring-with-sysdig-service">Provision an instance of Monitoring with Sysdig service</h2>
+
+<ol>
+  <li>
+    <p>Go to the <a href="https://cloud.ibm.com/observe"><strong>Observability</strong> category</a></p>
+
+    <p><img src="/book/images/observe-landing.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Select the category <strong>Monitoring</strong></p>
+  </li>
+  <li>
+    <p>Click the button <strong>Create monitoring instance</strong>.</p>
+  </li>
+  <li>
+    <p>Make sure to enter a meaningful name for the service instance such as sysdig-YOURINITIAL.</p>
+  </li>
+  <li>
+    <p>Select the resource group that your cluster is in. By default, the Default resource group is set for you.</p>
+
+    <p><img src="/book/images/logging-creation.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Choose a service plan for your service instance. By default, the Lite plan is selected for you. The Lite plan is good enough to continue the lab.</p>
+
+    <p><img src="/book/images/sysdig-plan.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Click <strong>Create</strong>. The Observability dashboard opens and shows the details for your service.</p>
+  </li>
+</ol>
+
+<h2 id="install-sysdig-agent-to-your-cluster">Install Sysdig Agent to your cluster</h2>
+
+<ol>
+  <li>
+    <p>Click <strong>Edit sources</strong></p>
+
+    <p><img src="/book/images/sysdig-edit.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Run the following command to install the agent.</p>
+
+    <p><img src="/book/images/sysdig-install.png" alt="" /></p>
+  </li>
+  <li>
+    <p>If the installation is successfull you should see the following message:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Detecting operating system
+ * Downloading Sysdig cluster role yaml
+ * Downloading Sysdig config map yaml
+ * Downloading Sysdig daemonset v2 yaml
+ * Creating namespace: ibm-observe
+ * Creating sysdig-agent serviceaccount in namespace: ibm-observe
+ * Creating sysdig-agent clusterrole and binding
+ clusterrole.rbac.authorization.k8s.io/sysdig-agent created
+ * Creating sysdig-agent secret using the ACCESS_KEY provided
+ * Retreiving the IKS Cluster ID and Cluster Name
+ * Setting cluster name as hacluster
+ * Setting ibm.containers-kubernetes.cluster.id 0d75a523aeec4aba831fbff645bfd223
+ * Updating agent configmap and applying to cluster
+ * Setting tags
+ * Setting collector endpoint
+ * Adding additional configuration to dragent.yaml
+ * Enabling Prometheus
+ configmap/sysdig-agent created
+ * Deploying the sysdig agent
+ daemonset.extensions/sysdig-agent created
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Optional</strong> Alternatively, you may deploy the Sysdig agent manually by following the instructions <a href="https://cloud.ibm.com/docs/services/Monitoring-with-Sysdig/config_agent.html#kube_manually">here</a>.</p>
+  </li>
+</ol>
+
+<h2 id="view-sysdig">View Sysdig</h2>
+
+<ol>
+  <li></li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>
