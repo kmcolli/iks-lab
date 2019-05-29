@@ -3,7 +3,7 @@ set -e
 export SHELLOPTS
 
 # prepare gitbook
-./node_modules/.bin/gitbook install
+gitbook install
 
 # all files to the same date to reduce the amount of updated files after each new generation
 touch -t 201811111111.11 book/*
@@ -12,4 +12,4 @@ touch -t 201811111111.11 book/*
 sed -i 's/var START_TIME = new Date();/var START_TIME = new Date(2018, 10, 11, 11, 11, 11);/g' ~/.gitbook/versions/3.2.3/lib/gitbook.js
 
 # build the book
-./node_modules/.bin/gitbook build
+gitbook build
