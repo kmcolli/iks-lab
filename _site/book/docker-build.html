@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Build the docker image with your application code | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Build the docker image with your application code" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/docker-build.html" />
+<meta property="og:url" content="http://localhost:4000/book/docker-build.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/docker-build.html","headline":"Build the docker image with your application code","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="build-the-docker-image-with-your-application-code">Build the docker image with your application code</h1>
+
+<p>Before you can deploy the application on the cluster, you first need to build the Docker image.</p>
+
+<ol>
+  <li><strong>Build</strong> a Docker image. Make sure to replace the value region and namespace
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nb">.</span> <span class="nt">-t</span> &lt;region&gt;.icr.io/&lt;namespace&gt;/todo-&lt;lastname&gt;:1.0
+</code></pre></div>    </div>
+    <blockquote>
+      <p>Region is <strong>de</strong> for the Frankfurt datacenter.</p>
+    </blockquote>
+  </li>
+  <li>Verify that the image was successfully added to your local docker registry
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker images
+</code></pre></div>    </div>
+    <p>Output:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> REPOSITORY                         TAG                 IMAGE ID            CREATED             SIZE
+ de.icr.io/lab-registry/todo-mace   1.0                 30bd6bcc47bc        42 minutes ago      124MB
+ node                               11.13.0-alpine      f34bcc2815ed        6 weeks ago         75.4MB
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

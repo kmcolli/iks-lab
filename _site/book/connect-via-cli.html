@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Connect to your cluster via CLI | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Connect to your cluster via CLI" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/connect-via-cli.html" />
+<meta property="og:url" content="http://localhost:4000/book/connect-via-cli.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/connect-via-cli.html","headline":"Connect to your cluster via CLI","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="connect-to-your-cluster-via-cli">Connect to your cluster via CLI</h1>
+
+<p>For this lab, a hosted shell is provided for you with all the necessary tools. Use this web shell to perform the tasks in this lab. If you are having problems with this web shell, you can use a local docker container and follow the instructions here instead.</p>
+
+<ol>
+  <li>
+    <p>Using Chrome or Firefox, go to the <a href="https://cloudshell-console-ikshursley.us-south.cf.cloud.ibm.com"><strong>Cloud Shell</strong></a>.</p>
+  </li>
+  <li>
+    <p>Login using your IBMid email and <strong>Passcode</strong> that has been given during the training.</p>
+  </li>
+  <li>
+    <p>Click on the Terminal icon to launch your web shell.</p>
+
+    <p><img src="/book/images/cloudshell-account.png" alt="" /></p>
+  </li>
+</ol>
+
+<h1 id="connect-to-ibm-cloud">Connect to IBM Cloud</h1>
+
+<ol>
+  <li>
+    <p>Select your cloud account or the one provided by the trainer.</p>
+  </li>
+  <li>Login to IBM Cloud
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud login
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Enter your IBMid email and password.</p>
+
+    <p>If you are using a Single-Sign-On authentication with IBMid, use ibmcloud login –sso.</p>
+  </li>
+  <li>
+    <p>Select an <strong>Account</strong> and a <strong>Region</strong>.</p>
+  </li>
+  <li>Once logged in you will see the following message:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Targeted account IBM's Account (0b123456789) &lt;-&gt; 1594534
+
+ API endpoint:      https://cloud.ibm.com
+ Region:            eu-de
+ User:              your-email-address@company.com
+ Account:           IBM's Account (0b123456789) &lt;-&gt; 1594534
+ Resource group:    No resource group targeted, use 'ic target -g RESOURCE_GROUP'
+ CF API endpoint:
+ Org:
+ Space:
+</code></pre></div>    </div>
+
+    <blockquote>
+      <p>If you need to switch to anoher region such as Frankfurt, run the command <strong>ibmcloud target -r eu-de</strong>.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<h1 id="target-your-resource-group">Target your Resource Group</h1>
+
+<p>You need to target a Resource Group (RG) to view your cluster or to add a service (e.g. Cloudant Database). Access to the group and the resources within it are managed by using Identity and Access Management (IAM).</p>
+
+<ol>
+  <li>In this lab, the Resource Group <strong>lab</strong> has been created. Select this resource group.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud target <span class="nt">-g</span> lab
+</code></pre></div>    </div>
+  </li>
+  <li>Verify you can see your cluster.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks clusters
+</code></pre></div>    </div>
+    <p>Output
+ <img src="/book/images/cli-cluster-list.png" alt="" /></p>
+  </li>
+  <li>Retrieve the cluster configuration by setting MYCLUSTER environment variable to your cluster name:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud ks cluster-config MY_CLUSTER_NAME
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Copy and paste the displayed set command to set the KUBECONFIG environment variable as directed.</p>
+  </li>
+  <li>To verify whether the KUBECONFIG environment variable is set properly or not, run the following command:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">echo</span> <span class="nv">$KUBECONFIG</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Check that the kubectl command is correctly configured
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl cluster-info
+</code></pre></div>    </div>
+    <p>The output should look like:
+ <img src="/book/images/cli-cluster-info.png" alt="" /></p>
+  </li>
+</ol>
+
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

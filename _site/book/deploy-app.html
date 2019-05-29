@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Deploy the app using Kubernetes Services and Deployments | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Deploy the app using Kubernetes Services and Deployments" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/deploy-app.html" />
+<meta property="og:url" content="http://localhost:4000/book/deploy-app.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/deploy-app.html","headline":"Deploy the app using Kubernetes Services and Deployments","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="deploy-the-app-using-kubernetes-services-and-deployments">Deploy the app using Kubernetes Services and Deployments</h1>
+
+<p>Different ways exist to make your app accessible from the internet. To choose the best networking option for your application, you can follow the decision tree available <a href="https://cloud.ibm.com/docs/containers/cs_network_planning.html#planning">here</a>.</p>
+
+<p>In this lab, we will test the <strong>Ingress</strong>.</p>
+
+<h2 id="deploy-with-ingress">Deploy with Ingress</h2>
+
+<ol>
+  <li>Navigate to the folder <strong>kubernetes</strong>.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">cd </span>kubernetes
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Let’s use the online web editor to modify the deployment file. Click the pen on the top right corner</p>
+
+    <p><img src="/book/images/cloudshell-ide-shortcut.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Open the project <strong>mytodos</strong> you cloned before. Select <strong>File</strong> on the left hand side, then <strong>Open Workspace</strong> and search for the downloaded project</p>
+
+    <p><img src="/book/images/cloudshell-ide-open.png" alt="" /></p>
+
+    <p><img src="/book/images/cloudshell-ide-view.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Select the file <code class="highlighter-rouge">ingress-tls-deploy.yaml</code> .</p>
+  </li>
+  <li>
+    <p>Replace all the values wrapped in &lt;…&gt; with the appropriate values: registry-region such as <code class="highlighter-rouge">de</code> for Frankfurt, registry-namespace such as <code class="highlighter-rouge">lab-registry</code>, cluster-name such as <code class="highlighter-rouge">eu-de</code> for Frankfurt, cluster-name such as <code class="highlighter-rouge">lab-cluster-1</code></p>
+
+    <p>Your YAML file should look as follows:</p>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="s">---</span>
+  <span class="s"># Application to deploy</span>
+ <span class="s">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+ <span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+ <span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+ <span class="na">spec</span><span class="pi">:</span>
+   <span class="na">replicas</span><span class="pi">:</span> <span class="s">2</span> <span class="c1"># tells deployment to run 2 pods matching the template</span>
+   <span class="na">selector</span><span class="pi">:</span>
+     <span class="na">matchLabels</span><span class="pi">:</span>
+       <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+   <span class="na">template</span><span class="pi">:</span>   <span class="c1"># create pods using pod definition in this template</span>
+     <span class="na">metadata</span><span class="pi">:</span>
+       <span class="na">labels</span><span class="pi">:</span>
+         <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="na">tier</span><span class="pi">:</span> <span class="s">frontend</span>
+     <span class="na">spec</span><span class="pi">:</span>
+       <span class="na">containers</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="na">image</span><span class="pi">:</span> <span class="s">&lt;registry-region&gt;.icr.io/&lt;registry-namespace&gt;/todo-&lt;lastname&gt;:1.0</span>
+         <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+         <span class="na">resources</span><span class="pi">:</span>
+           <span class="na">requests</span><span class="pi">:</span>
+             <span class="na">cpu</span><span class="pi">:</span> <span class="s">250m</span>     <span class="c1"># 250 millicores = 1/4 core</span>
+             <span class="na">memory</span><span class="pi">:</span> <span class="s">128Mi</span> <span class="c1"># 128 MB</span>
+           <span class="na">limits</span><span class="pi">:</span>
+             <span class="na">cpu</span><span class="pi">:</span> <span class="s">500m</span>
+             <span class="na">memory</span><span class="pi">:</span> <span class="s">384Mi</span>
+         <span class="c1"># envFrom:</span>
+         <span class="c1"># - secretRef:</span>
+         <span class="c1">#     name: database-credentials</span>
+ <span class="s">---</span>
+ <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+ <span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+ <span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos-ingress</span>
+   <span class="na">annotations</span><span class="pi">:</span>
+     <span class="s">ingress.bluemix.net/rewrite-path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">serviceName=mytodos</span><span class="nv"> </span><span class="s">rewrite=/"</span>
+     <span class="c1"># Force the use of https if the request is http</span>
+     <span class="s">ingress.bluemix.net/redirect-to-https</span><span class="pi">:</span> <span class="s2">"</span><span class="s">True"</span>
+ <span class="na">spec</span><span class="pi">:</span>
+   <span class="na">tls</span><span class="pi">:</span>
+   <span class="pi">-</span> <span class="na">hosts</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">&lt;cluster-name&gt;.&lt;cloud-region&gt;.containers.appdomain.cloud</span>
+     <span class="na">secretName</span><span class="pi">:</span> <span class="s">&lt;cluster-name&gt;</span>
+   <span class="na">rules</span><span class="pi">:</span>
+   <span class="pi">-</span> <span class="na">host</span><span class="pi">:</span> <span class="s">&lt;cluster-name&gt;.&lt;cloud-region&gt;.containers.appdomain.cloud</span>
+     <span class="na">http</span><span class="pi">:</span>
+       <span class="na">paths</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/todo/</span>
+         <span class="na">backend</span><span class="pi">:</span>
+           <span class="na">serviceName</span><span class="pi">:</span> <span class="s">mytodos</span>
+           <span class="na">servicePort</span><span class="pi">:</span> <span class="s">8080</span>
+ <span class="s">---</span>
+  <span class="s"># Service to expose frontend</span>
+ <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+ <span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+ <span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+   <span class="na">labels</span><span class="pi">:</span>
+     <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+     <span class="na">tier</span><span class="pi">:</span> <span class="s">frontend</span>
+ <span class="na">spec</span><span class="pi">:</span>
+   <span class="na">ports</span><span class="pi">:</span>
+   <span class="pi">-</span> <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+     <span class="na">port</span><span class="pi">:</span> <span class="s">8080</span>
+   <span class="na">selector</span><span class="pi">:</span>
+     <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+     <span class="na">tier</span><span class="pi">:</span> <span class="s">frontend</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Deploy the app into your Kubernetes cluster.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl apply <span class="nt">-f</span> ingress-tls-deploy.yaml
+</code></pre></div>    </div>
+    <p>Result:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> deployment.apps/mytodos created
+ ingress.extensions/mytodos-ingress created
+ service/mytodos created   
+</code></pre></div>    </div>
+  </li>
+  <li>Open a browser and check out the app with the following URL:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> https://&lt;cluster-name&gt;.eu-de.containers.appdomain.cloud/todo/
+</code></pre></div>    </div>
+    <p>In this example, the url would be <code class="highlighter-rouge">https://lab-cluster-1.eu-de.containers.appdomain.cloud/todo/</code></p>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

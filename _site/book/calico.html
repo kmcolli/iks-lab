@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Controlling traffic with network policies | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Controlling traffic with network policies" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/calico.html" />
+<meta property="og:url" content="http://localhost:4000/book/calico.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/calico.html","headline":"Controlling traffic with network policies","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="controlling-traffic-with-network-policies">Controlling traffic with network policies</h1>
+
+<p>Every Kubernetes cluster is set up with a network plug-in called <a href="https://www.projectcalico.org/">Calico</a>. Default network policies are set up to secure the public network interface of every worker node in IBM® Cloud Kubernetes Service.</p>
+
+<p>If you have unique security requirements or you have a multizone cluster with VLAN spanning enabled, you can use Calico and Kubernetes to create network policies for a cluster. With Kubernetes network policies, you can specify the network traffic that you want to allow or block to and from a pod within a cluster.</p>
+
+<h2 id="install-and-configure-the-calico-cli">Install and Configure the Calico CLI</h2>
+
+<ol>
+  <li>
+    <p>Include the –admin and –network options with the ibmcloud ks cluster-config command. –admin downloads the keys to access your infrastructure portfolio and run Calico commands on your worker nodes. –network downloads the Calico configuration file to run all Calico commands.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ibmcloud ks cluster-config --cluster &lt;cluster_name_or_ID&gt; --admin --network
+</code></pre></div>    </div>
+  </li>
+  <li>Create the /etc/calico directory.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo mkdir /etc/calico
+</code></pre></div>    </div>
+  </li>
+  <li>Move the Calico configuration file that you previously downloaded to the directory.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo mv /Users/&lt;user&gt;/.bluemix/plugins/container-service/clusters/&lt;cluster_name&gt;-admin/calicoctl.cfg /etc/calico
+</code></pre></div>    </div>
+  </li>
+  <li>On Mac OS, install Calico with Homebrew
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> brew install calico
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Otherwise, <a href="https://github.com/projectcalico/calicoctl/releases">download the Calico CLI.</a></p>
+  </li>
+  <li>Verify that the Calico configuration is working correctly.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> calicoctl get nodes
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="to-view-network-policies-in-clusters">To view network policies in clusters</h2>
+
+<ol>
+  <li>
+    <p>View all of the Calico and Kubernetes network policies that were created for the cluster. This list includes policies that might not be applied to any pods or hosts yet. For a network policy to be enforced, a Kubernetes resource must be found that matches the selector that was defined in the Calico network policy.</p>
+
+    <p>Network policies are scoped to specific namespaces:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> calicoctl get NetworkPolicy --all-namespaces -o wide
+</code></pre></div>    </div>
+
+    <p>Global network policies are not scoped to specific namespaces:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> calicoctl get GlobalNetworkPolicy -o wide
+</code></pre></div>    </div>
+  </li>
+  <li>View details for a network policy.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> calicoctl get NetworkPolicy -o yaml &lt;policy_name&gt; --namespace &lt;policy_namespace&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>View the details of all global network policies for the cluster.
+    <pre><code class="language-`"> calicoctl get GlobalNetworkPolicy -o yaml
+</code></pre>
+  </li>
+</ol>
+
+<h2 id="set-a-global-network-policy">Set a Global Network Policy</h2>
+
+<ol>
+  <li>Apply the following Global Network Policy to deny all ingress traffic
+ ```yml
+ apiVersion: projectcalico.org/v3
+ kind: GlobalNetworkPolicy
+ metadata:
+ name: cfee-ingress-deny-all
+ spec:
+ applyOnForward: true
+ ingress:
+    <ul>
+      <li>action: Deny
+  destination: {}
+  source: {}
+ order: 3000
+ selector: ibm.role==’worker_public’
+ types:</li>
+      <li>Ingress
+ ```</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="resources">Resources</h2>
+
+<p>For additional resources pay close attention to the following:</p>
+
+<ul>
+  <li><a href="https://cloud.ibm.com/docs/containers?topic=containers-network_policies#cli_install">Controlling traffic with network policies</a></li>
+  <li><a href="https://cloud.ibm.com/docs/containers?topic=containers-policy_tutorial#lesson3">Tutorial: Using Calico network policies to block traffic</a></li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

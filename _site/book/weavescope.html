@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Optional - Monitor your container with Weave Scope | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Optional - Monitor your container with Weave Scope" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/weavescope.html" />
+<meta property="og:url" content="http://localhost:4000/book/weavescope.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/weavescope.html","headline":"Optional - Monitor your container with Weave Scope","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="optional---monitor-your-container-with-weave-scope">Optional - Monitor your container with Weave Scope</h1>
+
+<p><a href="https://www.weave.works/docs/scope/latest/introducing/">Weave scope</a> provides a visual diagram of your resources within the kube cluster including services, pods, containers, processes, nodes, etc. Scope provides you interactive metrics for CPU and Memory and provides tools to tail and exec into a container. Scope is a powerful tool that you do not want to expose on the public internet.</p>
+
+<p><img src="/book/images/weavescope.png" alt="" /></p>
+
+<p>To use weave scope securely with your Kubernetes cluster you can follow these steps.</p>
+
+<ol>
+  <li>Deploy one of the provided RBAC permissions configuration file in the cluster.
+ To enable read/write permissions:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl apply -f "https://raw.githubusercontent.com/IBM-Cloud/kube-samples/master/weave-scope/weave-scope-rbac.yaml"
+</code></pre></div>    </div>
+    <p>To enable read-only permissions:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl apply --namespace weave -f "https://raw.githubusercontent.com/IBM-Cloud/kube-samples/master/weave-scope/weave-scope-rbac-readonly.yaml"
+</code></pre></div>    </div>
+  </li>
+  <li>Deploy the Weave Scope service, which is privately accessible by the cluster IP address.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl apply --namespace weave -f "https://cloud.weave.works/k8s/scope.yaml?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+</code></pre></div>    </div>
+  </li>
+  <li>Run a port forwarding command to bring up the service on your computer.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl port-forward -n weave "$(kubectl get -n weave pod --selector=weave-scope-component=app -o jsonpath='{.items..metadata.name}')" 4040
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Open your web browser to
+ <a href="http://localhost:4040" target="_blank">http://localhost:4040</a></p>
+
+    <blockquote>
+      <p>Weave Scope is a cpu heavy (especially the app). Scope is best utilized in a large cluster.</p>
+    </blockquote>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Use a Kubernetes Secret to connect to a managed Database service. | iks-lab</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Use a Kubernetes Secret to connect to a managed Database service." />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/book/connect-database.html" />
+<meta property="og:url" content="http://localhost:4000/book/connect-database.html" />
+<meta property="og:site_name" content="iks-lab" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"http://localhost:4000/book/connect-database.html","headline":"Use a Kubernetes Secret to connect to a managed Database service.","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=8ab522373bdfaeb4802a8255c4c9a4218c240523">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">iks-lab</a></h1>
+      
+
+      <h1 id="use-a-kubernetes-secret-to-connect-to-a-managed-database-service">Use a Kubernetes Secret to connect to a managed Database service.</h1>
+
+<p>The initial version of the application uses an in-memory database to store the todo. Yet, the web application can be configured to store the todo in either a Cloudant or a Mongo DBaaS.
+We will use a Cloudant DB to demonstrate how to connnect the web app to the  Cloudant service using the Kubernetes Secret.</p>
+
+<h2 id="create-an-instance-of-cloudant-and-its-credentials">Create an instance of Cloudant and its credentials</h2>
+
+<ol>
+  <li>
+    <p>Go to the <a href="https://cloud.ibm.com/catalog">Cloud Services Catalog</a></p>
+
+    <blockquote>
+      <p>To see all the available services in the catalog using the cli:
+ <code class="highlighter-rouge">ibmcloud catalog service-marketplace</code></p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Select the service <strong>Cloudant</strong></p>
+  </li>
+  <li>
+    <p>Create an instance of the service with the plan <strong>Lite</strong></p>
+
+    <p><img src="/book/images/cloudant-create.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Create the credentials to access the service.</p>
+
+    <p><img src="/book/images/cloudant-credentials.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Click <strong>New Credentials</strong> and keep all the default options</p>
+
+    <p><img src="/book/images/cloudant-credentials2.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Duplicate the file <code class="highlighter-rouge">credentials.template.env</code> in the root folder to a new file <code class="highlighter-rouge">credentials.env</code></p>
+  </li>
+  <li>
+    <p>Edit the file <code class="highlighter-rouge">credentials.env</code> and fill out the value for both CLOUDANT_USERNAME and CLOUDANT_APIKEY from the generated credentials above. Make sure you uncomment those 2 lines</p>
+  </li>
+  <li><strong>Optional</strong>: Create an instance of a service using the CLI instead of the Console.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud resource service-instance-create &lt;service_instance_name&gt; &lt;service_name&gt; &lt;service_plan_name&gt; &lt;location&gt;
+</code></pre></div>    </div>
+    <p>Example:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud resource service-instance-create todo-cloudant cloudant lite eu-de
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Optional</strong>: Verify you see the new instance created using the CLI
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ibmcloud resource service-instances
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="create-the-kubernetes-secret">Create the Kubernetes Secret</h2>
+
+<ol>
+  <li>Unless you have created a new namespace, we will use the namespace <strong>default</strong> in this lab. To find the list of Kubernetes namespaces:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get namespaces
+</code></pre></div>    </div>
+    <p>Output:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> NAME          STATUS    AGE
+ default       Active    7d
+ ibm-system    Active    7d
+ kube-system   Active    7d
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Create the secret used by the application to obtain service credentials:</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl create secret generic database-credentials <span class="nt">--from-env-file</span><span class="o">=</span>credentials.env
+</code></pre></div>    </div>
+    <p>Result:</p>
+    <blockquote>
+      <p>secret/database-credentials created</p>
+    </blockquote>
+  </li>
+  <li>Control that your secret was successfully created
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl get secrets
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>You can view the secret in the Kubernetes Dashboard</p>
+
+    <p><img src="/book/images/k8s-secret.png" alt="" /></p>
+  </li>
+</ol>
+
+<h2 id="redeploy-the-app">Redeploy the app</h2>
+
+<ol>
+  <li>
+    <p>Modify the YAML to uncomment the last 3 lines of the Deployment section as of <strong>envFrom</strong>.</p>
+
+    <p>Your YAML file should look as follows:</p>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="s">---</span>
+ <span class="s"># Application to deploy</span>
+ <span class="s">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+ <span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+ <span class="na">metadata</span><span class="pi">:</span>
+   <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+ <span class="na">spec</span><span class="pi">:</span>
+   <span class="na">replicas</span><span class="pi">:</span> <span class="s">2</span> <span class="c1"># tells deployment to run 2 pods matching the template</span>
+   <span class="na">selector</span><span class="pi">:</span>
+     <span class="na">matchLabels</span><span class="pi">:</span>
+       <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+   <span class="na">template</span><span class="pi">:</span>   <span class="c1"># create pods using pod definition in this template</span>
+     <span class="na">metadata</span><span class="pi">:</span>
+       <span class="na">labels</span><span class="pi">:</span>
+         <span class="na">app</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="na">tier</span><span class="pi">:</span> <span class="s">frontend</span>
+     <span class="na">spec</span><span class="pi">:</span>
+       <span class="na">containers</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mytodos</span>
+         <span class="na">image</span><span class="pi">:</span> <span class="s">&lt;region&gt;.icr.io/&lt;namespace&gt;/todo-&lt;lastname&gt;:1.0</span>
+         <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+         <span class="na">resources</span><span class="pi">:</span>
+           <span class="na">requests</span><span class="pi">:</span>
+             <span class="na">cpu</span><span class="pi">:</span> <span class="s">250m</span>     <span class="c1"># 250 millicores = 1/4 core</span>
+             <span class="na">memory</span><span class="pi">:</span> <span class="s">128Mi</span> <span class="c1"># 128 MB</span>
+           <span class="na">limits</span><span class="pi">:</span>
+             <span class="na">cpu</span><span class="pi">:</span> <span class="s">500m</span>
+             <span class="na">memory</span><span class="pi">:</span> <span class="s">384Mi</span>
+         <span class="na">envFrom</span><span class="pi">:</span>
+         <span class="pi">-</span> <span class="na">secretRef</span><span class="pi">:</span>
+             <span class="na">name</span><span class="pi">:</span> <span class="s">database-credentials</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Update the application with this new configuration
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> kubectl apply <span class="nt">-f</span> ingress-tls-deploy.yaml
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Create a new todo in the web app.</p>
+
+    <p><img src="/book/images/webapp-db.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Check the Cloudant Dashboard to validate this new todo has been persisted in the DB.</p>
+
+    <p><img src="/book/images/cloudant-dashboard-launch.png" alt="" /></p>
+
+    <p><img src="/book/images/cloudant-db.png" alt="" /></p>
+
+    <p><img src="/book/images/cloudant-record.png" alt="" /></p>
+  </li>
+</ol>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>
