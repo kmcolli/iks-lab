@@ -646,7 +646,7 @@
 </li>
 <li><p>Select the file <code>ingress-tls-deploy.yaml</code> .</p>
 </li>
-<li><p>Replace all the values wrapped in &lt;...&gt; with the appropriate values: registry-region such as <code>de</code> for Frankfurt, registry-namespace such as <code>lab-registry</code>, cluster-name such as <code>eu-de</code> for Frankfurt, cluster-name such as <code>lab-cluster-1</code></p>
+<li><p>Replace all the values wrapped in &lt;...&gt; with the appropriate values: registry-region such as <code>us</code> for Dallas, registry-namespace such as <code>pyrk8s</code>, cluster-name such as <code>us-south</code> for Dallas, cluster-name such as <code>workshop-cs-jp-pyrk8s10</code></p>
 <p> Your YAML file should look as follows:</p>
 <pre class="language-"><code class="lang-yaml"> <span class="token punctuation">---</span>
   <span class="token comment"># Application to deploy</span>
@@ -728,8 +728,8 @@
  service/mytodos created
 </code></pre></li>
 <li><p>Open a browser and check out the app with the following URL:</p>
-<pre class="language-"><code> https://<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>cluster-name</span><span class="token punctuation">&gt;</span></span>.eu-de.containers.appdomain.cloud/todo/
-</code></pre><p> In this example, the url would be <code>https://lab-cluster-1.eu-de.containers.appdomain.cloud/todo/</code></p>
+<pre class="language-"><code> https://<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>cluster-name</span><span class="token punctuation">&gt;</span></span>.us-south.containers.appdomain.cloud/todo/
+</code></pre><p> In this example, the url would be <code>https://workshop-cs-jp-pyrk8s10.us-south.containers.appdomain.cloud/todo/</code></p>
 </li>
 </ol>
 
@@ -775,7 +775,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Deploy app","level":"3.7","depth":1,"next":{"title":"Scale app","level":"3.8","depth":1,"path":"scale-app.md","ref":"scale-app.md","articles":[]},"previous":{"title":"Push docker image","level":"3.6","depth":1,"path":"docker-push.md","ref":"docker-push.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","collapsible-chapters","hints","copy-code-button","back-to-top-button","fancybox","web-header","livereload"],"root":"book","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"webheader":{"headerTitle":"IBM Cloud Kubernetes Service (IKS) Lab"},"prism":{"css":["prismjs/themes/prism-tomorrow.css"],"hints":{"info":"fa fa-info-circle","tip":"fa fa-mortar-board","danger":"fa fa-exclamation-cicle","working":"fa fa-wrench"}},"fancybox":{"helpers":{"buttons":{}},"openEffect":"elastic","closeEffect":"elastic"},"livereload":{},"web-header":{},"search":{},"collapsible-chapters":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"back-to-top-button":{},"copy-code-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"IBM Cloud Kubernetes Service Lab","gitbook":"3.2.3"},"file":{"path":"deploy-app.md","mtime":"2018-11-11T16:11:11.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-29T00:53:07.789Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Deploy app","level":"3.7","depth":1,"next":{"title":"Scale app","level":"3.8","depth":1,"path":"scale-app.md","ref":"scale-app.md","articles":[]},"previous":{"title":"Push docker image","level":"3.6","depth":1,"path":"docker-push.md","ref":"docker-push.md","articles":[]},"dir":"ltr"},"config":{"plugins":["prism","-highlight","collapsible-chapters","hints","copy-code-button","back-to-top-button","fancybox","web-header"],"root":"book","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"webheader":{"headerTitle":"IBM Cloud Kubernetes Service (IKS) Lab"},"prism":{"css":["prismjs/themes/prism-tomorrow.css"],"prism":{"lang":{"flow":"typescript"}},"ignore":["mermaid","eval-js"],"hints":{"info":"fa fa-info-circle","tip":"fa fa-mortar-board","danger":"fa fa-exclamation-cicle","working":"fa fa-wrench"}},"fancybox":{"helpers":{"buttons":{}},"openEffect":"elastic","closeEffect":"elastic"},"web-header":{},"search":{},"collapsible-chapters":{},"hints":{"danger":"fa fa-exclamation-circle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"back-to-top-button":{},"copy-code-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"IBM Cloud Kubernetes Service Lab","gitbook":"3.2.3"},"file":{"path":"deploy-app.md","mtime":"2019-05-29T14:13:48.030Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-29T18:49:53.855Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
@@ -818,10 +818,6 @@
     
         
         <script src="gitbook/gitbook-plugin-web-header/plugin.js"></script>
-        
-    
-        
-        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         

@@ -6,7 +6,9 @@ Before you can deploy the application on the cluster, you first need to build th
     ```sh
     docker build . -t <region>.icr.io/<namespace>/todo-<lastname>:1.0
     ```
-    > Region is **de** for the Frankfurt datacenter.
+    > Region is **us** for the Dallas datacenter.
+
+    > namespace is **pyrk8s** .
 
 1. Verify that the image was successfully added to your local docker registry
     ```sh

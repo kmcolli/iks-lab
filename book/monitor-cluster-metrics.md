@@ -18,6 +18,8 @@ Once the agent has started sending metrics to Sysdig for your environment, you c
 
 1. Select the resource group that your cluster is in. By default, the Default resource group is set for you.
 
+    > namespace should be pyrk8s
+
     ![](./images/logging-creation.png)
 
 1. Choose a service plan for your service instance. By default, the Lite plan is selected for you. The Lite plan is good enough to continue the lab.

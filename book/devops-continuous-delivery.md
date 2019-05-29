@@ -21,7 +21,11 @@ The toolchain includes:
 
     ![](./images/toolchain-landing.png)
 
-1. Review the default information for the toolchain settings. Select the region **Frankfurt** and the Resource Group **lab**.
+
+
+1. Review the default information for the toolchain settings. Select the region **Dallas** and the Resource Group **pyrk8s**.
+
+> make sure to append your last name to the toolchain name
 
     ![](./images/toolchain-name-param.png)
 

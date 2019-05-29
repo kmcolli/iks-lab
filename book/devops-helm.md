@@ -48,6 +48,10 @@ Helm is a client/server application :
     ```
 
 1. Edit the file **values.yaml** to change the repository values which includes: the region, the registry namespace, the image name, and the tag (=version).
+    ```
+    > repository region = us and namespace = pyrk8s
+
+    > cluster region = us-south
 
     ```yaml
       # Default values for mytodos.

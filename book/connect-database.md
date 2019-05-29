@@ -12,11 +12,19 @@ We will use a Cloudant DB to demonstrate how to connnect the web app to the  Clo
 
 1. Select the service **Cloudant**
 
+    > add your lastname as a Tag 
+
 1. Create an instance of the service with the plan **Lite**
 
     ![](./images/cloudant-create.png)
 
+    > Click create.  It will take a few minutes to provision the service.
+
+    > Click on the hamburger menu, select Resource List, and select the cloudant instance you just created.
+
 1. Create the credentials to access the service.
+
+    > select Service Credentials
 
     ![](./images/cloudant-credentials.png)
 
@@ -24,7 +32,7 @@ We will use a Cloudant DB to demonstrate how to connnect the web app to the  Clo
 
     ![](./images/cloudant-credentials2.png)
 
-1. Duplicate the file `credentials.template.env` in the root folder to a new file `credentials.env`
+1. Duplicate the file `~/todo/credentials.template.env` in the root folder to a new file `credentials.env`
 
 1. Edit the file `credentials.env` and fill out the value for both CLOUDANT_USERNAME and CLOUDANT_APIKEY from the generated credentials above. Make sure you uncomment those 2 lines
 
@@ -129,3 +137,5 @@ We will use a Cloudant DB to demonstrate how to connnect the web app to the  Clo
     ![](./images/cloudant-db.png)
 
     ![](./images/cloudant-record.png)
+
+    

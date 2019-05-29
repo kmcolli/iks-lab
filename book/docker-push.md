@@ -13,12 +13,14 @@ Before you can deploy the application on the cluster, you first need to push the
     ```sh
     ibmcloud cr namespace-list
     ```
-    You should get a namespace called **lab-registry**
+    You should get a namespace called **pyrk8s**
 
 1. **Push** the image to your private image registry.
     ```sh
     docker push <region>.icr.io/<namespace>/todo-<lastname>:1.0
     ```
+    > Region is **us** for the Dallas datacenter.
+
 
     > If you get the error `unauthorized: authentication required`, run the command **ibmcloud cr login**
 

@@ -23,7 +23,7 @@ In this lab, we will test the **Ingress**.
 
 1. Select the file `ingress-tls-deploy.yaml` .
 
-1. Replace all the values wrapped in <...> with the appropriate values: registry-region such as `de` for Frankfurt, registry-namespace such as `lab-registry`, cluster-name such as `eu-de` for Frankfurt, cluster-name such as `lab-cluster-1`
+1. Replace all the values wrapped in <...> with the appropriate values: registry-region such as `us` for Dallas, registry-namespace such as `pyrk8s`, cluster-name such as `us-south` for Dallas, cluster-name such as `workshop-cs-jp-pyrk8s10`
 
     Your YAML file should look as follows:
     ```yaml
@@ -111,6 +111,6 @@ In this lab, we will test the **Ingress**.
 
 1. Open a browser and check out the app with the following URL:
     ```
-    https://<cluster-name>.eu-de.containers.appdomain.cloud/todo/
+    https://<cluster-name>.us-south.containers.appdomain.cloud/todo/
     ```
-    In this example, the url would be ```https://lab-cluster-1.eu-de.containers.appdomain.cloud/todo/```
+    In this example, the url would be ```https://workshop-cs-jp-pyrk8s10.us-south.containers.appdomain.cloud/todo/```

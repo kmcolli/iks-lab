@@ -43,3 +43,6 @@
     ```sh
     kubectl uncordon <node name>
     ```
+
+    1. Restart the app and you will see your previous entires have been persisted in the Cloudant Database.
+    ```

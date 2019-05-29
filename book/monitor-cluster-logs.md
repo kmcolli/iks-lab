@@ -16,6 +16,8 @@ On the IBM Cloud, to configure cluster-level logging for a Kubernetes cluster, y
 
 1. Provide a unique **Service name** such as `logdna-<lastname>`.
 
+> select pyrk8s for the resource group
+
 1. Choose a **region/location** and select a **resource group**.
 
     ![](./images/logging-creation.png)
