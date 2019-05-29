@@ -13,22 +13,6 @@
       "css": [
         "prismjs/themes/prism-tomorrow.css"
       ],
-      "prism": {
-        "lang": {
-          "flow": "typescript"
-        }
-      },
-      "ignore": [
-        "mermaid", 
-        "eval-js" 
-      ],
-      "hints": {
-        "info": "fa fa-info-circle",
-        "tip": "fa fa-mortar-board",
-        "danger": "fa fa-exclamation-cicle",
-        "working": "fa fa-wrench"
-      }
-    },
     "webheader": {
       "headerTitle" : "IBM Cloud Kubernetes Service (IKS) Lab"
     }
